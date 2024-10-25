@@ -82,7 +82,6 @@ class UserPostStatisticsView(views.APIView):
         except User.DoesNotExist:
             return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Группируем посты по месяцам и подсчитываем их количество
         posts_per_month = (
             Posts.objects.filter(author=user)
             .annotate(month=TruncMonth('created_at'))
@@ -91,7 +90,6 @@ class UserPostStatisticsView(views.APIView):
             .order_by('month')
         )
 
-        # Рассчитываем среднее количество постов за месяц
         total_posts = sum([entry['post_count'] for entry in posts_per_month])
         total_months = len(posts_per_month)
         if total_months == 0:
@@ -99,7 +97,6 @@ class UserPostStatisticsView(views.APIView):
         else:
             average_posts_per_month = total_posts / total_months
 
-        # Формируем JSON-ответ
         data = {
             "user_id": user.id,
             "username": user.username,
