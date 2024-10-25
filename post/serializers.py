@@ -18,7 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username', 'password']
 
     def create(self, validated_data):
-        # Создаем пользователя с хешированным паролем
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password']
