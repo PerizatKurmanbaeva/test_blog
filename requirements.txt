@@ -1,0 +1,5 @@
+Django==4.2.16
+django-environ
+djangorestframework
+psycopg2>=2.9.0
+drf-yasg
