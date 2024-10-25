@@ -1,2 +1,3 @@
 post/migrations/*_*.py
-
+.idea/
+venv

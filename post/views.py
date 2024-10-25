@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny
 from rest_framework import views
 from django.db.models import Count
+from rest_framework.exceptions import PermissionDenied
 
 from test_Invest_Era.permissions import IsAuthenticatedOrReadOnly
 from .models import Posts
@@ -37,6 +38,18 @@ class PostRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     http_method_names = ['get', 'put', 'delete']
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def update(self, request, *args, **kwargs):
+        post = self.get_object()
+        if post.author != request.user:
+            raise PermissionDenied("Вы не можете редактировать этот пост, так как вы не являетесь его автором.")
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        post = self.get_object()
+        if post.author != request.user:
+            raise PermissionDenied("Вы не можете удалить этот пост, так как вы не являетесь его автором.")
+        return super().destroy(request, *args, **kwargs)
 
 
 class PostSearchView(generics.ListAPIView):
